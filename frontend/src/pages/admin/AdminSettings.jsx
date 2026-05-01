@@ -121,7 +121,7 @@ export default function AdminSettings() {
       </h2>
       {children}
     </div>
-  )
+  ))
 
   return (
     <div className="max-w-2xl space-y-6 animate-fade-in">
