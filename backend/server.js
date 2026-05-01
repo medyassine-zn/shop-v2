@@ -14,7 +14,7 @@ const app = express();
 
 
 
-const { sendOrderNotificationToAdmin } = require('./utils/mail'); // ولا path متاعك
+const { sendOrderNotificationToAdmin } = require('./utils/mailer.js'); // ولا path متاعك
 
 app.get('/test-email', async (req, res) => {
   try {
