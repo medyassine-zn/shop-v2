@@ -180,17 +180,16 @@ const sendOrderNotificationToAdmin = async (order, settings) => {
   if (!settings.notificationEmail) return;
   if (!process.env.BREVO_USER || !process.env.BREVO_API_KEY) return;
 
-  try {
-    const transporter = createTransporter();
-    await transporter.sendMail({
-      from: `"${settings.storeName}" <${process.env.BREVO_USER}>`,
-      to: settings.notificationEmail,
-      subject: `🛒 Nouvelle commande ${order.orderNumber} - ${settings.storeName}`,
-      html: buildAdminOrderEmail(order, settings.storeName),
-    });
-    console.log(`✉️ Admin notification sent to ${settings.notificationEmail}`);
+ try {
+    await sendEmail(
+      settings.notificationEmail,
+      `🛒 Nouvelle commande ${order.orderNumber} - ${settings.storeName}`,
+      buildAdminOrderEmail(order, settings.storeName)
+    );
+
+    console.log(`✉️ Admin notification sent`);
   } catch (err) {
-    console.error('❌ Failed to send admin email:', err.message);
+    console.error('❌ Failed to send admin email:', err);
   }
 };
 
@@ -199,16 +198,15 @@ const sendOrderConfirmationToCustomer = async (order, settings) => {
   if (!process.env.BREVO_USER || !process.env.BREVO_API_KEY) return;
 
   try {
-    const transporter = createTransporter();
-    await transporter.sendMail({
-      from: `"${settings.storeName}" <${process.env.BREVO_USER}>`,
-      to: order.customer.email,
-      subject: `✅ Confirmation de commande ${order.orderNumber}`,
-      html: buildCustomerConfirmEmail(order, settings.storeName),
-    });
-    console.log(`✉️ Confirmation sent to ${order.customer.email}`);
+    await sendEmail(
+      order.customer.email,
+      `✅ Confirmation de commande ${order.orderNumber}`,
+      buildCustomerConfirmEmail(order, settings.storeName)
+    );
+
+    console.log(`✉️ Customer email sent`);
   } catch (err) {
-    console.error('❌ Failed to send customer email:', err.message);
+    console.error('❌ Failed to send customer email:', err);
   }
 };
 
