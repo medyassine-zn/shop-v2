@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Store, Phone, Mail, MapPin, MessageCircle, Bell, Globe,
   DollarSign, Lock, Eye, EyeOff, Save
@@ -67,7 +67,7 @@ export default function AdminSettings() {
   fetchSettings()
 }, [])
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target
     if (name.startsWith('social_')) {
       const key = name.replace('social_', '')
@@ -75,9 +75,9 @@ export default function AdminSettings() {
     } else {
       setForm(f => ({ ...f, [name]: value }))
     }
-  }
+  }, [])
 
-  const handleSave = async (e) => {
+  const handleSave = useCallback(async (e) => {
     e.preventDefault()
     setSaving(true)
     try {
@@ -94,9 +94,9 @@ export default function AdminSettings() {
     } finally {
       setSaving(false)
     }
-  }
+  }, [form, setSettings])
 
-  const handleChangePassword = async (e) => {
+  const handleChangePassword = useCallback(async (e) => {
     e.preventDefault()
     if (passForm.newPassword !== passForm.confirmPassword) {
       toast.error('Les mots de passe ne correspondent pas')
@@ -119,18 +119,14 @@ export default function AdminSettings() {
     } finally {
       setSavingPass(false)
     }
-  }
+  }, [passForm])
+
+  const handlePassChange = useCallback((e) => {
+    const { name, value } = e.target
+    setPassForm(f => ({ ...f, [name]: value }))
+  }, [])
 
   if (loading) return <div className="flex justify-center py-20"><Spinner size="lg" /></div>
-
-  const Section = React.memo(({ icon: Icon, title, children }) => (
-    <div className="card p-6 space-y-4">
-      <h2 className="font-semibold text-ink-800 flex items-center gap-2">
-        <Icon className="w-4 h-4 text-accent" /> {title}
-      </h2>
-      {children}
-    </div>
-  ))
 
   return (
     <div className="max-w-2xl space-y-6 animate-fade-in">
@@ -144,15 +140,12 @@ export default function AdminSettings() {
           <div>
             <label className="label">Nom de la boutique</label>
             <input
-  name="storeName"
-  value={form.storeName}
-  onChange={(e) => {
-    const value = e.target.value
-    setForm(prev => ({ ...prev, storeName: value }))
-  }}
-  className="input"
-  placeholder="MyShop"
-/>
+              name="storeName"
+              value={form.storeName}
+              onChange={handleChange}
+              className="input"
+              placeholder="MyShop"
+            />
           </div>
           <div>
             <label className="label">Description</label>
@@ -237,7 +230,7 @@ export default function AdminSettings() {
                   type={showPass ? 'text' : 'password'}
                   name={field.name}
                   value={passForm[field.name]}
-                  onChange={e => setPassForm(f => ({ ...f, [field.name]: e.target.value }))}
+                  onChange={handlePassChange}
                   className="input pr-10"
                   required
                 />
