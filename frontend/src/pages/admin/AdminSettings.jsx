@@ -25,30 +25,38 @@ export default function AdminSettings() {
   const [savingPass, setSavingPass] = useState(false)
 
   useEffect(() => {
-    API.get('/api/settings')
-      .then(res => {
-        const s = res.data.settings
-        setForm({
-          storeName: s.storeName || '',
-          storeDescription: s.storeDescription || '',
-          contactPhone: s.contactPhone || '',
-          contactEmail: s.contactEmail || '',
-          address: s.address || '',
-          whatsappNumber: s.whatsappNumber || '',
-          notificationEmail: s.notificationEmail || '',
-          currency: s.currency || 'EUR',
-          currencySymbol: s.currencySymbol || '€',
-          freeShippingThreshold: s.freeShippingThreshold?.toString() || '0',
-          socialLinks: {
-            facebook: s.socialLinks?.facebook || '',
-            instagram: s.socialLinks?.instagram || '',
-            twitter: s.socialLinks?.twitter || '',
-          },
-        })
+  const fetchSettings = async () => {
+    try {
+      const res = await API.get('/api/settings')
+      const s = res.data.settings
+
+      setForm({
+        storeName: s.storeName || '',
+        storeDescription: s.storeDescription || '',
+        contactPhone: s.contactPhone || '',
+        contactEmail: s.contactEmail || '',
+        address: s.address || '',
+        whatsappNumber: s.whatsappNumber || '',
+        notificationEmail: s.notificationEmail || '',
+        currency: s.currency || 'EUR',
+        currencySymbol: s.currencySymbol || '€',
+        freeShippingThreshold: s.freeShippingThreshold?.toString() || '0',
+        socialLinks: {
+          facebook: s.socialLinks?.facebook || '',
+          instagram: s.socialLinks?.instagram || '',
+          twitter: s.socialLinks?.twitter || '',
+        },
       })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
+
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  fetchSettings()
+}, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
