@@ -134,7 +134,16 @@ export default function AdminSettings() {
         <Section icon={Store} title="Informations de la boutique">
           <div>
             <label className="label">Nom de la boutique</label>
-            <input name="storeName" value={form.storeName} onChange={handleChange} className="input" placeholder="MyShop" />
+            <input
+  name="storeName"
+  value={form.storeName}
+  onChange={(e) => {
+    const value = e.target.value
+    setForm(prev => ({ ...prev, storeName: value }))
+  }}
+  className="input"
+  placeholder="MyShop"
+/>
           </div>
           <div>
             <label className="label">Description</label>
