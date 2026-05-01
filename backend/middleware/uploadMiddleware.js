@@ -30,13 +30,13 @@ const upload = multer({
   fileFilter: fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit per file
-    files: 10, // Maximum 10 files at once
+    files: 5, // Maximum 5 files at once
   },
 });
 
 // Export middleware for single and multiple uploads
 module.exports = {
   uploadSingle: upload.single('image'),
-  uploadMultiple: upload.array('images', 10),
+  uploadMultiple: upload.array('images', 5),
   upload,
 };
