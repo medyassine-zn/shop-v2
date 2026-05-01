@@ -9,7 +9,7 @@ import { Spinner } from '../../components/common/States'
 import toast from 'react-hot-toast'
 
 export default function AdminSettings() {
-  const { settings, setSettings } = useSettings()
+  const { setSettings } = useSettings()
   const [form, setForm] = useState({
     storeName: '', storeDescription: '', contactPhone: '',
     contactEmail: '', address: '', whatsappNumber: '', notificationEmail: '',
