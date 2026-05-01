@@ -2,10 +2,12 @@ const nodemailer = require('nodemailer');
 
 const createTransporter = () => {
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.BREVO_USER,      // email verified في Brevo
+      pass: process.env.BREVO_API_KEY,   // API key
     },
   });
 };
@@ -169,12 +171,12 @@ const buildCustomerConfirmEmail = (order, storeName) => {
 
 const sendOrderNotificationToAdmin = async (order, settings) => {
   if (!settings.notificationEmail) return;
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return;
+  if (!process.env.BREVO_USER || !process.env.BREVO_API_KEY) return;
 
   try {
     const transporter = createTransporter();
     await transporter.sendMail({
-      from: `"${settings.storeName}" <${process.env.EMAIL_USER}>`,
+      from: `"${settings.storeName}" <${process.env.BREVO_USER}>`,
       to: settings.notificationEmail,
       subject: `🛒 Nouvelle commande ${order.orderNumber} - ${settings.storeName}`,
       html: buildAdminOrderEmail(order, settings.storeName),
@@ -187,12 +189,12 @@ const sendOrderNotificationToAdmin = async (order, settings) => {
 
 const sendOrderConfirmationToCustomer = async (order, settings) => {
   if (!order.customer.email) return;
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return;
+  if (!process.env.BREVO_USER || !process.env.BREVO_API_KEY) return;
 
   try {
     const transporter = createTransporter();
     await transporter.sendMail({
-      from: `"${settings.storeName}" <${process.env.EMAIL_USER}>`,
+      from: `"${settings.storeName}" <${process.env.BREVO_USER}>`,
       to: order.customer.email,
       subject: `✅ Confirmation de commande ${order.orderNumber}`,
       html: buildCustomerConfirmEmail(order, settings.storeName),

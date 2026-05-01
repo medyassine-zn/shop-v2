@@ -12,6 +12,40 @@ const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
+
+
+const { sendOrderNotificationToAdmin } = require('./utils/mail'); // ولا path متاعك
+
+app.get('/test-email', async (req, res) => {
+  try {
+    const transporter = require('nodemailer').createTransport({
+      host: 'smtp-relay.brevo.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_API_KEY,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Test" <${process.env.BREVO_USER}>`,
+      to: process.env.BREVO_USER, // باش توصلك لنفسك
+      subject: "TEST EMAIL",
+      html: "<h1>It works 🔥</h1>",
+    });
+
+    res.send("✅ Email sent");
+  } catch (err) {
+    console.error("❌ ERROR:", err);
+    res.send(err.message);
+  }
+});
+
+
+
+
+
 // Middleware
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
