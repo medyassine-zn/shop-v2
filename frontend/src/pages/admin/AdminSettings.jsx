@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Store, Phone, Mail, MapPin, MessageCircle, Bell, Globe,
   DollarSign, Lock, Eye, EyeOff, Save
@@ -106,7 +106,7 @@ export default function AdminSettings() {
 
   if (loading) return <div className="flex justify-center py-20"><Spinner size="lg" /></div>
 
-  const Section = ({ icon: Icon, title, children }) => (
+  const Section = React.memo(({ icon: Icon, title, children }) => (
     <div className="card p-6 space-y-4">
       <h2 className="font-semibold text-ink-800 flex items-center gap-2">
         <Icon className="w-4 h-4 text-accent" /> {title}
