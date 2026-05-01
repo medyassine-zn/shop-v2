@@ -61,7 +61,7 @@ export default function AdminProductForm() {
     try {
       const formData = new FormData()
       files.forEach(f => formData.append('images', f))
-      const res = await API.post('/api/upload/multiple', formData, {
+      const res = await API.post('/api/products/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       if (res.data.success) {
