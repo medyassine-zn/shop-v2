@@ -8,6 +8,15 @@ import { useSettings } from '../../context/SettingsContext'
 import { Spinner } from '../../components/common/States'
 import toast from 'react-hot-toast'
 
+const Section = React.memo(({ icon: Icon, title, children }) => (
+  <div className="card p-6 space-y-4">
+    <h2 className="font-semibold text-ink-800 flex items-center gap-2">
+      <Icon className="w-4 h-4 text-accent" /> {title}
+    </h2>
+    {children}
+  </div>
+));
+
 export default function AdminSettings() {
   const { setSettings } = useSettings()
   const [form, setForm] = useState({
